@@ -1,0 +1,1574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Year's Concert Archive</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f8f9fa;
+            min-height: 100vh;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            padding: 48px;
+            overflow: hidden;
+            animation: fadeIn 0.5s ease-in;
+            border: 1px solid #e9ecef;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            color: #1a1a1a;
+            margin-bottom: 8px;
+            font-size: 2.5em;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            color: #6b7280;
+            margin-bottom: 32px;
+            font-size: 1em;
+            font-weight: 400;
+        }
+
+        .controls {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+
+        select, input {
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 15px;
+            font-family: inherit;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        select {
+            min-width: 140px;
+            cursor: pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 40px;
+            appearance: none;
+        }
+
+        select:hover {
+            border-color: #9ca3af;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #495057;
+            box-shadow: 0 0 0 3px rgba(73, 80, 87, 0.1);
+        }
+
+        input {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        input:hover {
+            border-color: #9ca3af;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #495057;
+            box-shadow: 0 0 0 3px rgba(73, 80, 87, 0.1);
+        }
+
+        /* Timeline styles */
+        .timeline-section {
+            margin-bottom: 32px;
+            padding: 24px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border: 1px solid #e9ecef;
+        }
+
+        .timeline-title {
+            font-size: 0.875em;
+            color: #4b5563;
+            margin-bottom: 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .timeline-wrapper {
+            position: relative;
+            padding: 0 20px;
+        }
+
+        .timeline {
+            position: relative;
+            height: 80px;
+            margin: 20px 0;
+            cursor: pointer;
+        }
+
+        .timeline-line {
+            position: absolute;
+            top: 40px;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #e5e7eb 0%, #cbd5e1 100%);
+            border-radius: 2px;
+        }
+
+        .timeline-pointer {
+            position: absolute;
+            top: 28px;
+            width: 28px;
+            height: 28px;
+            background: #dc3545;
+            border-radius: 50%;
+            border: 4px solid white;
+            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3), 0 2px 4px rgba(0,0,0,0.1);
+            transform: translateX(-50%);
+            cursor: grab;
+            z-index: 20;
+            transition: all 0.2s;
+        }
+
+        .timeline-pointer:hover {
+            transform: translateX(-50%) scale(1.1);
+            box-shadow: 0 6px 16px rgba(220, 53, 69, 0.4), 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .timeline-pointer:active {
+            cursor: grabbing;
+        }
+
+        .timeline-pointer::after {
+            content: '';
+            position: absolute;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 8px solid #e74c3c;
+        }
+
+        .timeline-pointer-label {
+            position: absolute;
+            top: -32px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #dc3545;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 0.8em;
+            font-weight: 700;
+            white-space: nowrap;
+            box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+        }
+
+        .timeline-marker {
+            position: absolute;
+            top: 33px;
+            width: 20px;
+            height: 20px;
+            background: #495057;
+            border-radius: 50%;
+            border: 4px solid white;
+            box-shadow: 0 3px 8px rgba(73, 80, 87, 0.3), 0 1px 2px rgba(0,0,0,0.1);
+            transform: translateX(-50%);
+            z-index: 12;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .timeline-marker:hover {
+            background: #212529;
+            transform: translateX(-50%) scale(1.5);
+            z-index: 25;
+            box-shadow: 0 6px 16px rgba(33, 37, 41, 0.4), 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .timeline-marker:active {
+            background: #dc3545;
+            z-index: 30;
+        }
+
+        .timeline-marker-tooltip {
+            position: absolute;
+            bottom: calc(100% + 10px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1f2937;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.8em;
+            font-weight: 600;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .timeline-marker-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: #1f2937;
+        }
+
+        .timeline-marker:hover .timeline-marker-tooltip {
+            opacity: 1;
+        }
+
+        .main-content {
+            display: flex;
+            gap: 24px;
+            margin-top: 24px;
+        }
+
+        .main-column {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .sidebar-column {
+            width: 320px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        @media (max-width: 900px) {
+            body {
+                padding: 20px 10px;
+            }
+
+            .container {
+                padding: 24px;
+                border-radius: 16px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .main-content {
+                flex-direction: column;
+            }
+
+            .sidebar-column {
+                width: 100%;
+            }
+
+            .piece-stats {
+                position: static;
+            }
+        }
+
+        .piece-stats {
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 24px;
+            flex: 1;
+        }
+
+        .piece-stats.empty {
+            display: none;
+        }
+
+        .piece-stats-title {
+            font-size: 0.95em;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .year-link {
+            color: #212529;
+            cursor: pointer;
+            text-decoration: underline;
+            text-decoration-color: transparent;
+            transition: all 0.2s;
+            margin: 0 3px;
+            font-weight: 500;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+
+        .year-link:hover {
+            color: #495057;
+            text-decoration-color: #495057;
+            background: #f8f9fa;
+        }
+
+        .piece-stats-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85em;
+        }
+
+        .piece-stats-table thead {
+            background: #212529;
+            color: white;
+        }
+
+        .piece-stats-table th {
+            background: #212529;
+            padding: 10px 12px;
+            text-align: left;
+            font-weight: 600;
+            color: white;
+            border-bottom: 2px solid #e5e7eb;
+            font-size: 0.8em;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .piece-stats-table th:nth-child(1) {
+            width: 75%;
+        }
+
+        .piece-stats-table th:nth-child(2) {
+            width: 25%;
+        }
+
+        .piece-stats-table th:hover {
+            background: #343a40;
+        }
+
+        .piece-stats-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #eee;
+            color: #374151;
+            background: transparent !important;
+        }
+
+        .piece-stats-table td:nth-child(1) {
+            width: 75%;
+        }
+
+        .piece-stats-table td:nth-child(2) {
+            width: 25%;
+        }
+
+        .piece-stats-table td:hover {
+            background-color: #f8f9fa !important;
+        }
+
+        .piece-stats-table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .conductor-name-cell {
+            transition: all 0.2s;
+            padding: 2px 4px;
+            border-radius: 4px;
+            margin: -2px -4px;
+            white-space: nowrap;
+        }
+
+        .conductor-name-cell:hover {
+            text-decoration-color: currentColor !important;
+            background: #f8f9fa;
+        }
+
+        .conductor-name-cell.active {
+            font-weight: 700;
+            background: #fff5f5;
+            color: #dc3545 !important;
+        }
+
+        .timeline-year-label {
+            position: absolute;
+            top: 0;
+            font-size: 0.75em;
+            color: #6b7280;
+            white-space: nowrap;
+            font-weight: 600;
+        }
+
+        .timeline-year-label.start {
+            left: 0;
+        }
+
+        .timeline-year-label.end {
+            right: 0;
+            transform: translateX(0);
+        }
+
+        .timeline-year-mark {
+            position: absolute;
+            top: 38px;
+            width: 2px;
+            height: 10px;
+            background: #9ca3af;
+            transform: translateX(-50%);
+            border-radius: 1px;
+            z-index: 2;
+        }
+
+        .timeline-year-mark-label {
+            position: absolute;
+            top: 50px;
+            font-size: 0.7em;
+            color: #6b7280;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            font-weight: 500;
+        }
+
+        .timeline-year-dot {
+            position: absolute;
+            top: 39px;
+            width: 4px;
+            height: 4px;
+            background: #9ca3af;
+            border-radius: 50%;
+            transform: translateX(-50%);
+            z-index: 1;
+            transition: all 0.15s;
+            cursor: pointer;
+            opacity: 0.8;
+        }
+
+        .timeline-year-dot:hover {
+            background: #6b7280;
+            width: 6px;
+            height: 6px;
+            opacity: 1;
+            z-index: 3;
+        }
+
+        .conductor-info {
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .conductor-label {
+            font-size: 0.7em;
+            color: #6b7280;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+        }
+
+        .conductor-name {
+            font-size: 0.95em;
+            font-weight: 600;
+            color: #1f2937;
+            transition: all 0.2s;
+        }
+
+        .conductor-name:hover {
+            color: #212529;
+            text-decoration-color: #212529 !important;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            table-layout: fixed;
+        }
+
+        thead {
+            background: #212529;
+            color: white;
+        }
+
+        th {
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+        }
+
+        th:nth-child(1) {
+            width: 5%;
+        }
+
+        th:nth-child(2) {
+            width: 45%;
+        }
+
+        th:nth-child(3) {
+            width: 35%;
+        }
+
+        th:nth-child(4) {
+            width: 15%;
+        }
+
+        th:hover {
+            background: #343a40;
+        }
+
+        th.sortable::after {
+            content: ' ↕';
+            opacity: 0.5;
+            font-size: 0.8em;
+        }
+
+        th.sort-asc::after {
+            content: ' ↑';
+            opacity: 1;
+        }
+
+        th.sort-desc::after {
+            content: ' ↓';
+            opacity: 1;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            word-wrap: break-word;
+        }
+
+        td:nth-child(1) {
+            width: 5%;
+        }
+
+        td:nth-child(2) {
+            width: 45%;
+        }
+
+        td:nth-child(3) {
+            width: 35%;
+        }
+
+        td:nth-child(4) {
+            width: 15%;
+        }
+
+        tbody tr {
+            transition: background-color 0.15s;
+        }
+
+        tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .piece-name {
+            font-weight: 600;
+            color: #212529;
+            cursor: pointer;
+            text-decoration: underline;
+            text-decoration-color: transparent;
+            transition: all 0.2s;
+            padding: 2px 4px;
+            border-radius: 4px;
+            margin: -2px -4px;
+        }
+
+        .piece-name:hover {
+            color: #495057;
+            text-decoration-color: #495057;
+            background: #f8f9fa;
+        }
+
+        .piece-name.active {
+            color: #dc3545;
+            text-decoration-color: #dc3545;
+            background: #fff5f5;
+            font-weight: 700;
+            display: inline;
+        }
+
+        .composer {
+            color: #6b7280;
+            font-size: 0.9em;
+            cursor: pointer;
+            text-decoration: underline;
+            text-decoration-color: transparent;
+            transition: all 0.2s;
+            padding: 2px 4px;
+            border-radius: 4px;
+            margin: -2px -4px;
+            font-weight: 500;
+        }
+
+        .composer:hover {
+            color: #495057;
+            text-decoration-color: #495057;
+            background: #f8f9fa;
+        }
+
+        .composer.active {
+            color: #dc3545;
+            font-weight: 700;
+            text-decoration-color: #dc3545;
+            background: #fff5f5;
+        }
+
+        .links {
+            display: flex;
+            gap: 8px;
+        }
+
+        .link {
+            padding: 6px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.8em;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: inline-block;
+        }
+
+        .link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .link.youtube {
+            background: #dc3545;
+            color: white;
+        }
+
+        .link.youtube:hover {
+            background: #c82333;
+        }
+
+        .link.amazon {
+            background: #ffc107;
+            color: #212529;
+        }
+
+        .link.amazon:hover {
+            background: #e0a800;
+        }
+
+        .loading, .error {
+            text-align: center;
+            padding: 60px 40px;
+            color: #6b7280;
+            font-size: 1.1em;
+        }
+
+        .error {
+            background: #fef2f2;
+            color: #dc2626;
+            border-radius: 10px;
+            margin-bottom: 24px;
+            border: 2px solid #fecaca;
+            padding: 16px 20px;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 60px 40px;
+            color: #9ca3af;
+            font-size: 1em;
+        }
+
+        footer {
+            text-align: center;
+            padding: 32px 20px;
+            color: #6b7280;
+            font-size: 0.875em;
+            margin-top: 48px;
+        }
+
+        footer .copyright {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>New Year's Concert Archive</h1>
+        <p class="subtitle">Explore programmes from the Vienna Philharmonic's Neujahrskonzert</p>
+
+        <div id="error-message" class="error" style="display: none;"></div>
+
+        <div class="controls">
+            <select id="year-selector">
+            </select>
+            <input type="text" id="search-box" placeholder="Search pieces or composers...">
+        </div>
+
+        <!-- Timeline Section -->
+        <div class="timeline-section">
+            <div class="timeline-title">Select Year</div>
+            <div class="timeline-wrapper">
+                <div id="timeline" class="timeline">
+                    <div class="timeline-line"></div>
+                    <div id="timeline-pointer" class="timeline-pointer">
+                        <div class="timeline-pointer-label" id="pointer-year">-</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="loading" class="loading">Loading...</div>
+
+        <div class="main-content">
+            <div class="main-column">
+                <table id="programme-table" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th class="sortable" data-sort="index">#</th>
+                            <th class="sortable" data-sort="name">Piece</th>
+                            <th class="sortable" data-sort="composer">Composer</th>
+                            <th>Links</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body"></tbody>
+                </table>
+            </div>
+
+            <div class="sidebar-column">
+                <div id="conductor-info" class="conductor-info">
+                    <div class="conductor-label">Conductor</div>
+                    <div class="conductor-name" id="conductor-name" style="cursor: pointer; text-decoration: underline; text-decoration-color: transparent;">-</div>
+                </div>
+                <div id="piece-stats-container" class="piece-stats empty">
+                    <div class="piece-stats-title" id="piece-stats-title"></div>
+                    <div id="piece-stats-table-container"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="copyright">© <span id="copyright-year">2024</span> Guangyang Li. All rights reserved.</div>
+    </footer>
+
+    <script>
+        const DATA_URL = 'data.json';
+
+        let allData = [];
+        let filteredData = [];
+        let selectedYear = '';
+        let searchQuery = '';
+        let sortColumn = 'index';
+        let sortDirection = 'asc';
+        let selectedPiece = null;
+        let selectedConductor = null;
+        let selectedComposer = null;
+        let minYear = 0;
+        let maxYear = 0;
+        let isDragging = false;
+
+        // Helper functions
+        function clearTimelineMarkers() {
+            document.querySelectorAll('.timeline-marker').forEach(m => m.remove());
+        }
+
+        function clearSelection() {
+            selectedPiece = null;
+            selectedConductor = null;
+            selectedComposer = null;
+        }
+
+        function getYearData(piece, year) {
+            const displayYear = year ? Number(year) : piece.years[0].year;
+            return piece.years.find(y => y.year === displayYear) || piece.years[0];
+        }
+
+        function hasLinks(links) {
+            return !!(links?.youtube || links?.amazon);
+        }
+
+        function createYearLinksHTML(years) {
+            return years.map(year => `<span class="year-link" data-year="${year}">${year}</span>`).join(', ');
+        }
+
+        function updateStatsTitle(title, yearCount, yearLinks, type) {
+            const plural = yearCount !== 1 ? 's' : '';
+            const templates = {
+                piece: `Played in ${yearCount} year${plural}: ${yearLinks}`,
+                conductor: `${title} conducted ${yearCount} year${plural}: ${yearLinks}`,
+                composer: `${title} pieces played in ${yearCount} year${plural}: ${yearLinks}`
+            };
+            return templates[type];
+        }
+
+        function applyColumnWidths(table, hasLinks) {
+            const widths = hasLinks
+                ? { 1: '5%', 2: '45%', 3: '35%', 4: '15%' }
+                : { 1: '6%', 2: '50%', 3: '44%' };
+
+            Object.entries(widths).forEach(([col, width]) => {
+                table.querySelectorAll(`th:nth-child(${col}), td:nth-child(${col})`).forEach(el => {
+                    el.style.width = width;
+                });
+            });
+        }
+
+        async function loadData() {
+            try {
+                // Add cache-busting parameter to ensure fresh data
+                const url = DATA_URL + '?v=' + Date.now();
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`Failed to load: ${response.status}`);
+                }
+                const data = await response.json();
+
+                if (!data.concerts || !Array.isArray(data.concerts)) {
+                    throw new Error('Invalid data format');
+                }
+
+                allData = data.concerts;
+                processData();
+                initializeTimeline();
+                updateConductorDisplay();
+                render();
+                // Show default year info after initial render
+                if (!selectedPiece && !selectedConductor && !selectedComposer) {
+                    showDefaultYearInfo();
+                }
+            } catch (error) {
+                showError(`Error: ${error.message}`);
+            }
+        }
+
+        function processData() {
+            const pieceMap = new Map();
+
+            allData.forEach(concert => {
+                const year = Number(concert.year);
+                if (!year) return;
+
+                if (concert.pieces && Array.isArray(concert.pieces)) {
+                    concert.pieces.forEach((piece, index) => {
+                        const key = `${piece.name || ''}_${piece.composer || ''}`.toLowerCase();
+
+                        if (!pieceMap.has(key)) {
+                            pieceMap.set(key, {
+                                name: piece.name || 'Unknown',
+                                composer: piece.composer || 'Unknown',
+                                years: [],
+                                links: piece.links || {}
+                            });
+                        }
+
+                        const pieceData = pieceMap.get(key);
+                        pieceData.years.push({
+                            year: year,
+                            order: index + 1,
+                            links: piece.links || {}
+                        });
+                    });
+                }
+            });
+
+            filteredData = Array.from(pieceMap.values());
+        }
+
+        function initializeTimeline() {
+            const years = [...new Set(allData.map(c => Number(c.year)).filter(Boolean))].sort((a, b) => a - b);
+            minYear = years[0];
+            maxYear = years[years.length - 1];
+
+            const timeline = document.getElementById('timeline');
+            const timelineLine = timeline.querySelector('.timeline-line');
+
+            // Add start and end year labels
+            const startLabel = document.createElement('div');
+            startLabel.className = 'timeline-year-label start';
+            startLabel.textContent = minYear;
+            timeline.appendChild(startLabel);
+
+            const endLabel = document.createElement('div');
+            endLabel.className = 'timeline-year-label end';
+            endLabel.textContent = maxYear;
+            timeline.appendChild(endLabel);
+
+            // Add year marks every 10 years
+            const firstRoundYear = Math.ceil(minYear / 10) * 10;
+            for (let year = firstRoundYear; year <= maxYear; year += 10) {
+                addTimelineMark(timeline, year);
+            }
+
+            // Add last year mark if not a round year
+            if (maxYear % 10 !== 0) {
+                addTimelineMark(timeline, maxYear, 100);
+            }
+
+            // Add small dots for every year
+            for (let year = minYear; year <= maxYear; year++) {
+                const dot = document.createElement('div');
+                dot.className = 'timeline-year-dot';
+                dot.style.left = `${getYearPosition(year)}%`;
+                dot.setAttribute('data-year', year);
+                dot.setAttribute('title', year.toString());
+                dot.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    updateYearSelection(year);
+                });
+                timeline.appendChild(dot);
+            }
+
+            // Set initial pointer position to latest year
+            const pointer = document.getElementById('timeline-pointer');
+            const pointerLabel = document.getElementById('pointer-year');
+            selectedYear = maxYear.toString();
+            updatePointerPosition(maxYear);
+
+            // Timeline click handler
+            timeline.addEventListener('click', (e) => {
+                if (e.target === timeline || e.target === timelineLine) {
+                    // Clear markers only if no conductor/piece/composer is selected
+                    if (!selectedPiece && !selectedConductor && !selectedComposer) {
+                        document.querySelectorAll('.timeline-marker').forEach(m => m.remove());
+                    }
+                    const rect = timeline.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const percent = (x / rect.width) * 100;
+                    updateYearSelection(getYearFromPosition(percent));
+                }
+            });
+
+            // Pointer drag handler
+            pointer.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                e.preventDefault();
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                const timeline = document.getElementById('timeline');
+                const rect = timeline.getBoundingClientRect();
+                const x = Math.max(0, Math.min(rect.width, e.clientX - rect.left));
+                const percent = (x / rect.width) * 100;
+                updateYearSelection(getYearFromPosition(percent));
+            });
+
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+            });
+        }
+
+        function getYearFromPosition(percent) {
+            const yearRange = maxYear - minYear;
+            const year = Math.round(minYear + (percent / 100) * yearRange);
+            return Math.max(minYear, Math.min(maxYear, year));
+        }
+
+        function updateYearSelection(year) {
+            updatePointerPosition(year);
+            selectedYear = year.toString();
+            document.getElementById('year-selector').value = selectedYear;
+            render();
+        }
+
+        function addYearLinkHandlers(element) {
+            element.querySelectorAll('.year-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    updateYearSelection(Number(e.target.dataset.year));
+                });
+            });
+        }
+
+        function createLink(href, className, text) {
+            const link = document.createElement('a');
+            link.href = href;
+            link.target = '_blank';
+            link.className = `link ${className}`;
+            link.textContent = text;
+            return link;
+        }
+
+        function createTimelineMarker(year) {
+            const timeline = document.getElementById('timeline');
+            const marker = document.createElement('div');
+            marker.className = 'timeline-marker';
+            marker.style.left = `${getYearPosition(year)}%`;
+            marker.setAttribute('data-year', year);
+
+            const tooltip = document.createElement('div');
+            tooltip.className = 'timeline-marker-tooltip';
+            tooltip.textContent = year;
+            marker.appendChild(tooltip);
+
+            marker.addEventListener('click', (e) => {
+                e.stopPropagation();
+                tooltip.style.opacity = '0';
+                setTimeout(() => {
+                    if (Number(selectedYear) !== year) {
+                        tooltip.style.opacity = '';
+                    }
+                }, 300);
+                updateYearSelection(year);
+            });
+
+            marker.addEventListener('mouseleave', () => {
+                if (Number(selectedYear) === year) {
+                    tooltip.style.opacity = '0';
+                }
+            });
+
+            timeline.appendChild(marker);
+            return marker;
+        }
+
+        function getYearPosition(year) {
+            const yearRange = maxYear - minYear;
+            return yearRange > 0 ? ((year - minYear) / yearRange) * 100 : 50;
+        }
+
+        function addTimelineMark(timeline, year, position = null) {
+            const pos = position !== null ? position : getYearPosition(year);
+            const mark = document.createElement('div');
+            mark.className = 'timeline-year-mark';
+            mark.style.left = `${pos}%`;
+            timeline.appendChild(mark);
+
+            const markLabel = document.createElement('div');
+            markLabel.className = 'timeline-year-mark-label';
+            markLabel.textContent = year;
+            markLabel.style.left = `${pos}%`;
+            timeline.appendChild(markLabel);
+        }
+
+        function updatePointerPosition(year) {
+            const pointer = document.getElementById('timeline-pointer');
+            const pointerLabel = document.getElementById('pointer-year');
+            pointer.style.left = `${getYearPosition(year)}%`;
+            pointerLabel.textContent = year;
+
+            // Hide tooltips for markers at this position
+            document.querySelectorAll('.timeline-marker').forEach(marker => {
+                const tooltip = marker.querySelector('.timeline-marker-tooltip');
+                if (tooltip) {
+                    tooltip.style.opacity = Number(marker.getAttribute('data-year')) === year ? '0' : '';
+                }
+            });
+
+            updateConductorDisplay();
+        }
+
+        function updateConductorDisplay() {
+            const conductorName = document.getElementById('conductor-name');
+            const yearNum = Number(selectedYear);
+            const concert = allData.find(c => c.year === yearNum);
+
+            if (selectedYear && concert && concert.conductor) {
+                conductorName.textContent = concert.conductor;
+                conductorName.style.cursor = 'pointer';
+                conductorName.style.textDecoration = 'underline';
+                conductorName.style.textDecorationColor = 'transparent';
+                conductorName.onclick = () => showConductorYears(concert.conductor);
+            } else {
+                conductorName.textContent = '-';
+                conductorName.style.cursor = 'default';
+                conductorName.style.textDecoration = 'none';
+                conductorName.onclick = null;
+            }
+        }
+
+        function getStatsElements() {
+            return {
+                statsContainer: document.getElementById('piece-stats-container'),
+                statsTitle: document.getElementById('piece-stats-title'),
+                statsTableContainer: document.getElementById('piece-stats-table-container')
+            };
+        }
+
+        function showPieceYears(piece) {
+            const { statsContainer, statsTitle, statsTableContainer } = getStatsElements();
+            clearTimelineMarkers();
+
+            if (!piece) {
+                clearSelection();
+                showDefaultYearInfo();
+                return;
+            }
+
+            clearSelection();
+            selectedPiece = piece;
+
+            const pieceYears = piece.years.map(y => y.year).sort((a, b) => a - b);
+            const yearLinks = createYearLinksHTML(pieceYears);
+            statsTitle.innerHTML = updateStatsTitle('', pieceYears.length, yearLinks, 'piece');
+            addYearLinkHandlers(statsTitle);
+
+            // Calculate conductor statistics
+            const conductorStats = {};
+            pieceYears.forEach(year => {
+                const concert = allData.find(c => c.year === year);
+                if (concert?.conductor) {
+                    conductorStats[concert.conductor] = (conductorStats[concert.conductor] || 0) + 1;
+                }
+            });
+
+            statsTableContainer.innerHTML = '';
+            if (Object.keys(conductorStats).length > 0) {
+                buildConductorStatsTable(statsTableContainer, conductorStats);
+            }
+
+            statsContainer.classList.remove('empty');
+            pieceYears.forEach(year => createTimelineMarker(year));
+        }
+
+        function buildConductorStatsTable(container, conductorStats) {
+            const table = document.createElement('table');
+            table.className = 'piece-stats-table';
+            table.innerHTML = '<thead><tr><th>Conductor</th><th>Times</th></tr></thead>';
+
+            const tbody = document.createElement('tbody');
+            Object.entries(conductorStats)
+                .sort((a, b) => b[1] !== a[1] ? b[1] - a[1] : a[0].localeCompare(b[0]))
+                .forEach(([conductor, count]) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `<td class="conductor-name-cell" data-conductor="${escapeHtml(conductor)}" style="cursor: pointer; color: #4a90e2; text-decoration: underline; text-decoration-color: transparent;">${escapeHtml(conductor)}</td><td>${count}</td>`;
+                    row.querySelector('.conductor-name-cell').addEventListener('click', () => {
+                        showConductorYears(conductor);
+                    });
+                    tbody.appendChild(row);
+                });
+
+            table.appendChild(tbody);
+            container.appendChild(table);
+        }
+
+        function showConductorYears(conductor) {
+            const { statsContainer, statsTitle, statsTableContainer } = getStatsElements();
+            clearTimelineMarkers();
+
+            if (!conductor) {
+                selectedConductor = null;
+                if (selectedPiece) {
+                    showPieceYears(selectedPiece);
+                } else if (selectedComposer) {
+                    showComposerYears(selectedComposer);
+                } else {
+                    showDefaultYearInfo();
+                }
+                return;
+            }
+
+            // Check if we're viewing a piece - if so, preserve it
+            const wasViewingPiece = !!selectedPiece;
+            const savedPiece = selectedPiece;
+
+            clearSelection();
+            selectedConductor = conductor;
+
+            // Restore piece selection if we were viewing a piece
+            if (wasViewingPiece && savedPiece) {
+                selectedPiece = savedPiece;
+            }
+
+            const conductorYears = allData
+                .filter(c => c.conductor === conductor)
+                .map(c => c.year)
+                .sort((a, b) => a - b);
+
+            if (conductorYears.length === 0) {
+                selectedConductor = null;
+                return;
+            }
+
+            const yearLinks = createYearLinksHTML(conductorYears);
+            statsTitle.innerHTML = updateStatsTitle(conductor, conductorYears.length, yearLinks, 'conductor');
+            addYearLinkHandlers(statsTitle);
+
+            // If viewing a piece, rebuild the conductor stats table
+            if (wasViewingPiece && selectedPiece) {
+                const conductorStats = {};
+                selectedPiece.years.forEach(({ year }) => {
+                    const concert = allData.find(c => c.year === year);
+                    if (concert?.conductor) {
+                        conductorStats[concert.conductor] = (conductorStats[concert.conductor] || 0) + 1;
+                    }
+                });
+                statsTableContainer.innerHTML = '';
+                if (Object.keys(conductorStats).length > 0) {
+                    buildConductorStatsTable(statsTableContainer, conductorStats);
+                }
+            } else {
+                statsTableContainer.innerHTML = '';
+            }
+
+            // Update active state of conductor cells
+            document.querySelectorAll('.conductor-name-cell').forEach(cell => {
+                const isActive = cell.dataset.conductor === conductor;
+                cell.classList.toggle('active', isActive);
+                cell.style.color = isActive ? '#e74c3c' : '#4a90e2';
+            });
+
+            statsContainer.classList.remove('empty');
+            conductorYears.forEach(year => createTimelineMarker(year));
+        }
+
+        function showComposerYears(composer) {
+            const { statsContainer, statsTitle, statsTableContainer } = getStatsElements();
+            clearTimelineMarkers();
+
+            if (!composer) {
+                selectedComposer = null;
+                if (selectedPiece) {
+                    showPieceYears(selectedPiece);
+                } else if (selectedConductor) {
+                    showConductorYears(selectedConductor);
+                } else {
+                    showDefaultYearInfo();
+                }
+                return;
+            }
+
+            clearSelection();
+            selectedComposer = composer;
+
+            const composerYears = new Set();
+            allData.forEach(concert => {
+                if (concert.pieces?.some(piece => piece.composer === composer)) {
+                    composerYears.add(concert.year);
+                }
+            });
+
+            const composerYearsArray = Array.from(composerYears).sort((a, b) => a - b);
+
+            if (composerYearsArray.length === 0) {
+                selectedComposer = null;
+                return;
+            }
+
+            const yearLinks = createYearLinksHTML(composerYearsArray);
+            statsTitle.innerHTML = updateStatsTitle(composer, composerYearsArray.length, yearLinks, 'composer');
+            addYearLinkHandlers(statsTitle);
+
+            statsTableContainer.innerHTML = '';
+            statsContainer.classList.remove('empty');
+            composerYearsArray.forEach(year => createTimelineMarker(year));
+        }
+
+        function showDefaultYearInfo() {
+            const { statsContainer, statsTitle, statsTableContainer } = getStatsElements();
+
+            if (!selectedYear) {
+                statsContainer.classList.add('empty');
+                return;
+            }
+
+            const concert = allData.find(c => c.year === Number(selectedYear));
+            if (!concert?.conductor) {
+                statsContainer.classList.add('empty');
+                return;
+            }
+
+            const conductorYears = allData
+                .filter(c => c.conductor === concert.conductor)
+                .map(c => c.year)
+                .sort((a, b) => a - b);
+
+            const yearLinks = createYearLinksHTML(conductorYears);
+            statsTitle.innerHTML = updateStatsTitle(concert.conductor, conductorYears.length, yearLinks, 'conductor');
+            addYearLinkHandlers(statsTitle);
+
+            statsTableContainer.innerHTML = '';
+            statsContainer.classList.remove('empty');
+        }
+
+        function filterData() {
+            let filtered = [...filteredData];
+
+            if (selectedYear) {
+                const yearNum = Number(selectedYear);
+                filtered = filtered.filter(piece => piece.years.some(y => y.year === yearNum));
+            }
+
+            if (searchQuery) {
+                const query = searchQuery.toLowerCase();
+                filtered = filtered.filter(piece =>
+                    piece.name.toLowerCase().includes(query) ||
+                    piece.composer.toLowerCase().includes(query) ||
+                    piece.years.some(y => y.year.toString().includes(query))
+                );
+            }
+
+            return filtered;
+        }
+
+        function sortData(data) {
+            const displayYear = selectedYear ? Number(selectedYear) : null;
+
+            return [...data].sort((a, b) => {
+                const aYearData = getYearData(a, displayYear);
+                const bYearData = getYearData(b, displayYear);
+                const aIndex = aYearData?.order || 0;
+                const bIndex = bYearData?.order || 0;
+
+                let aVal, bVal;
+                if (sortColumn === 'index') {
+                    aVal = aIndex;
+                    bVal = bIndex;
+                } else if (sortColumn === 'name') {
+                    aVal = a.name.toLowerCase();
+                    bVal = b.name.toLowerCase();
+                } else {
+                    aVal = a.composer.toLowerCase();
+                    bVal = b.composer.toLowerCase();
+                }
+
+                // Primary sort
+                if (aVal !== bVal) {
+                    return sortDirection === 'asc' ? (aVal < bVal ? -1 : 1) : (aVal > bVal ? -1 : 1);
+                }
+
+                // Secondary sort by index when not sorting by index
+                return sortColumn !== 'index' ? (aIndex - bIndex) : 0;
+            });
+        }
+
+        function render() {
+            const loadingEl = document.getElementById('loading');
+            const tableEl = document.getElementById('programme-table');
+            const tbody = document.getElementById('table-body');
+            const yearSelector = document.getElementById('year-selector');
+
+            const years = [...new Set(allData.map(c => Number(c.year)).filter(Boolean))].sort((a, b) => b - a);
+
+            // Always have a year selected (default to latest)
+            if (!selectedYear && maxYear > 0) {
+                selectedYear = maxYear.toString();
+            }
+
+            yearSelector.innerHTML = '';
+            years.forEach(year => {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                if (Number(selectedYear) === year) option.selected = true;
+                yearSelector.appendChild(option);
+            });
+
+            // Update conductor display
+            updateConductorDisplay();
+
+            // Show default year info in sidebar if nothing is selected
+            if (!selectedPiece && !selectedConductor && !selectedComposer) {
+                showDefaultYearInfo();
+            }
+
+            let displayData = filterData();
+            displayData = sortData(displayData);
+
+            // Check if any piece has links for the selected year
+            const displayYear = selectedYear ? Number(selectedYear) : null;
+            const hasAnyLinks = displayData.some(piece => {
+                const yearData = displayYear ? piece.years.find(y => y.year === displayYear) : null;
+                return hasLinks(yearData?.links || piece.links || {});
+            });
+
+            // Show/hide Links column header
+            const linksHeader = document.querySelector('#programme-table thead tr th:nth-child(4)');
+            const table = document.querySelector('#programme-table');
+            if (linksHeader) {
+                linksHeader.style.display = hasAnyLinks ? '' : 'none';
+            }
+
+            tbody.innerHTML = '';
+
+            const columnCount = hasAnyLinks ? 4 : 3;
+
+            if (displayData.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="${columnCount}" class="no-results">No pieces found</td></tr>`;
+            } else {
+                displayData.forEach((piece, index) => {
+                    const row = document.createElement('tr');
+
+                    const yearData = getYearData(piece, selectedYear);
+                    const orderNum = yearData?.order || index + 1;
+                    const links = yearData?.links || piece.links || {};
+                    const pieceKey = `${piece.name}_${piece.composer}`.toLowerCase();
+                    const isActive = selectedPiece?.name === piece.name && selectedPiece?.composer === piece.composer;
+                    const isComposerActive = selectedComposer === piece.composer;
+
+                    // Create cells using DOM methods to properly handle data attributes
+                    const orderCell = document.createElement('td');
+                    orderCell.textContent = orderNum;
+                    row.appendChild(orderCell);
+
+                    const nameCell = document.createElement('td');
+                    const nameDiv = document.createElement('div');
+                    nameDiv.className = `piece-name ${isActive ? 'active' : ''}`;
+                    nameDiv.setAttribute('data-piece-key', pieceKey);
+                    nameDiv.textContent = piece.name;
+                    nameCell.appendChild(nameDiv);
+                    row.appendChild(nameCell);
+
+                    const composerCell = document.createElement('td');
+                    const composerDiv = document.createElement('div');
+                    composerDiv.className = `composer ${isComposerActive ? 'active' : ''}`;
+                    composerDiv.setAttribute('data-composer', piece.composer);
+                    composerDiv.textContent = piece.composer;
+                    composerCell.appendChild(composerDiv);
+                    row.appendChild(composerCell);
+
+                    // Only add Links cell if there are any links
+                    if (hasAnyLinks) {
+                        const linksCell = document.createElement('td');
+                        const linksDiv = document.createElement('div');
+                        linksDiv.className = 'links';
+                        if (links.youtube) {
+                            linksDiv.appendChild(createLink(links.youtube, 'youtube', 'YouTube'));
+                        }
+                        if (links.amazon) {
+                            linksDiv.appendChild(createLink(links.amazon, 'amazon', 'Amazon'));
+                        }
+                        if (!hasLinks(links)) {
+                            const noLinkSpan = document.createElement('span');
+                            noLinkSpan.style.color = '#999';
+                            noLinkSpan.textContent = '-';
+                            linksDiv.appendChild(noLinkSpan);
+                        }
+                        linksCell.appendChild(linksDiv);
+                        row.appendChild(linksCell);
+                    }
+
+                    tbody.appendChild(row);
+                });
+            }
+
+            // Apply column widths after table is rendered
+            applyColumnWidths(table, hasAnyLinks);
+
+            // Update sort indicators
+            document.querySelectorAll('th.sortable').forEach(th => {
+                th.classList.remove('sort-asc', 'sort-desc');
+                if (th.dataset.sort === sortColumn) {
+                    th.classList.add(sortDirection === 'asc' ? 'sort-asc' : 'sort-desc');
+                }
+            });
+
+            loadingEl.style.display = 'none';
+            tableEl.style.display = 'table';
+
+            // Add click handlers to piece names
+            document.querySelectorAll('.piece-name').forEach(nameEl => {
+                nameEl.addEventListener('click', (e) => {
+                    // Use currentTarget to ensure we get the element with the data attribute
+                    const pieceKey = e.currentTarget.dataset.pieceKey;
+                    if (!pieceKey) return;
+
+                    // Search in the full filteredData array (contains all pieces across all years)
+                    const piece = filteredData.find(p =>
+                        `${p.name}_${p.composer}`.toLowerCase() === pieceKey
+                    );
+                    showPieceYears(piece || null);
+                    render();
+                });
+            });
+
+            // Add click handlers to composer names
+            document.querySelectorAll('.composer').forEach(composerEl => {
+                composerEl.addEventListener('click', (e) => {
+                    const composer = e.target.dataset.composer;
+                    if (composer) {
+                        showComposerYears(composer);
+                        render();
+                    }
+                });
+            });
+        }
+
+        function showError(message) {
+            const errorEl = document.getElementById('error-message');
+            errorEl.textContent = message;
+            errorEl.style.display = 'block';
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Event listeners
+        document.getElementById('year-selector').addEventListener('change', (e) => {
+            updateYearSelection(Number(e.target.value));
+            // Clear piece/conductor/composer selections when year changes
+            if (!selectedPiece && !selectedConductor && !selectedComposer) {
+                showDefaultYearInfo();
+            }
+        });
+
+        document.getElementById('search-box').addEventListener('input', (e) => {
+            searchQuery = e.target.value;
+            render();
+        });
+
+        // Sort column headers
+        document.querySelectorAll('th.sortable').forEach(th => {
+            th.addEventListener('click', () => {
+                const newSort = th.dataset.sort;
+                if (sortColumn === newSort) {
+                    sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+                } else {
+                    sortColumn = newSort;
+                    sortDirection = 'asc';
+                }
+                render();
+            });
+        });
+
+        loadData();
+
+        // Set copyright year dynamically
+        document.getElementById('copyright-year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>
