@@ -35,6 +35,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>New Year's Concert Archive</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='50' y='75' font-size='80' text-anchor='middle' fill='%23B8941F'%3E♬%3C/text%3E%3C/svg%3E" type="image/svg+xml">
     <style>
         * {
             margin: 0;
@@ -79,6 +80,18 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             font-size: 2.5em;
             font-weight: 700;
             letter-spacing: -0.02em;
+        }
+
+        h1 a {
+            color: inherit;
+            text-decoration: none;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        h1 a:hover {
+            color: #495057;
+            text-decoration: underline;
         }
 
         .subtitle {
@@ -765,7 +778,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </head>
 <body>
     <div class="container">
-        <h1>New Year's Concert Archive</h1>
+        <h1><a href="/">New Year's Concert Archive</a></h1>
         <p class="subtitle">Explore programmes from the Vienna Philharmonic's Neujahrskonzert</p>
 
         <div id="error-message" class="error" style="display: none;"></div>
