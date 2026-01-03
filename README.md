@@ -11,3 +11,11 @@ The website features:
 - Search functionality for pieces and composers
 - Detailed programme information with links to recordings
 - Statistics and historical data about conductors and performances
+
+## Contributing
+
+Contributions are welcome! If you'd like to contribute, please fork the repository, make your changes, and submit a pull request. For major changes or questions, please open an issue first to discuss what you would like to change.
+
+## License
+
+This project is licensed under the BSD 3-Clause License. See the [LICENSE](LICENSE) file for details.
